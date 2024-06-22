@@ -7,3 +7,8 @@ input#idFacture{
 .input-left-align {
     text-align: start !important;
 }
+
+#ajouterFacture{
+    background-color: #4e5066;
+    color: white;
+}

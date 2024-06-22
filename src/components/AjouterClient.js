@@ -1,95 +1,114 @@
 import React, { Component } from 'react';
+import { Modal, Button, Form } from 'react-bootstrap';
 
 export class AjouterClient extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            nomClient: '',
-            adresse: '',
-            telephone: '',
-            email: '',
-            client: {},
-            
-        };
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      nomClient: '',
+      adresse: '',
+      telephone: '',
+      email: '',
+      showAlert: false,
+      alertMessage: '',
+    };
+  }
 
-    nameChange = (event) => {
-        this.setState({ nomClient: event.target.value });
-    }
+  nameChange = (event) => {
+    this.setState({ nomClient: event.target.value });
+  }
 
-    adresseChange = (event) => {
-        this.setState({ adresse: event.target.value });
-    }
+  adresseChange = (event) => {
+    this.setState({ adresse: event.target.value });
+  }
 
-    telephoneChange = (event) => {
-        this.setState({ telephone: event.target.value });
-    }
+  telephoneChange = (event) => {
+    this.setState({ telephone: event.target.value });
+  }
 
-    emailChange = (event) => {
-        this.setState({ email: event.target.value });
-    }
+  emailChange = (event) => {
+    this.setState({ email: event.target.value });
+  }
 
-    clientInfo = (event) => {
-        event.preventDefault();
-        const client = {
-            nomClient: this.state.nomClient,
-            adresse: this.state.adresse,
-            telephone: this.state.telephone,
-            email: this.state.email
-        };
-        this.setState({ client });
-        if(JSON.parse(localStorage.getItem('clients')) === null){
-            localStorage.setItem('clients', JSON.stringify([client]));
-        }else if(JSON.parse(localStorage.getItem('clients')).length === 0){
-            localStorage.setItem('clients', JSON.stringify([client]));
-        }else{
-            localStorage.setItem('clients', JSON.stringify([...JSON.parse(localStorage.getItem('clients')), client]));
-        }
-    }
+  clientInfo = (event) => {
+    event.preventDefault();
+    const client = {
+      nomClient: this.state.nomClient,
+      adresse: this.state.adresse,
+      telephone: this.state.telephone,
+      email: this.state.email,
+    };
 
-    componentDidUpdate() {
-        if (this.state.client.nomClient) {
-            alert(`Client: ${this.state.client.nomClient} ajouté avec succès!`);
-            window.location.reload();
-            this.props.closeModal();
-        }
-    }
+    let clients = JSON.parse(localStorage.getItem('clients')) || [];
+    clients.push(client);
+    localStorage.setItem('clients', JSON.stringify(clients));
 
+    this.setState({ showAlert: true, alertMessage: `Client: ${client.nomClient} ajouté avec succès!` });
+
+    this.props.closeModal();
+  }
+
+  handleAlertDismiss = () => {
+    this.setState({ showAlert: false, alertMessage: '' });
     
+    window.location.reload();
+  }
 
-    render() {
-        return (
-            <div id="myDiv" style={{border:"1px solid black", borderRadius:"10px", padding:"30px", position:'absolute',left:"40%", bottom:"20%", backgroundColor:"white"}}>
-                <button
-                    type="button"
-                    className="btn-close"
-                    onClick={this.props.closeModal}
-                    aria-label="Close"
-                ></button> 
-                <form>
-                    <div className="form-group">
-                        <label htmlFor="nomClient">Nom Client</label>
-                        <input type="text" className="form-control" id="nomClient" onChange={this.nameChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="adresse">Adresse</label>
-                        <input type="text" className="form-control" id="adresse" onChange={this.adresseChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="telephone">Telephone</label>
-                        <input type="number" min="0" className="form-control" id="telephone" onChange={this.telephoneChange}/>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="exampleInputEmail1">Email address</label>
-                        <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={this.emailChange}/>
-                        <small id="emailHelp" className="form-text text-muted">We'll never share your email with anyone else.</small>
-                    </div>
-        
-                    <button type="submit" className="btn btn-primary" onClick={this.clientInfo}>Submit</button>
-                </form>
-            </div>
-        );
-    }
+  render() {
+    const { show, closeModal } = this.props;
+    const { showAlert, alertMessage } = this.state;
+
+    return (
+      <>
+        <Modal show={show} onHide={closeModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Ajouter Client</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form onSubmit={this.clientInfo}>
+              <Form.Group controlId="nomClient">
+                <Form.Label>Nom Client</Form.Label>
+                <Form.Control className='input-left-align' type="text" onChange={this.nameChange} required />
+              </Form.Group>
+              <Form.Group controlId="adresse">
+                <Form.Label>Adresse</Form.Label>
+                <Form.Control className='input-left-align' type="text" onChange={this.adresseChange} required />
+              </Form.Group>
+              <Form.Group controlId="telephone">
+                <Form.Label>Telephone</Form.Label>
+                <Form.Control className='input-left-align'  type="number" onChange={this.telephoneChange} required />
+              </Form.Group>
+              <Form.Group controlId="email">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control className='input-left-align' type="email" onChange={this.emailChange} required />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+              <Button variant="secondary" type="submit">
+                Submit
+              </Button>
+            </Form>
+          </Modal.Body>
+        </Modal>
+        {showAlert && (
+          <Modal show={showAlert} onHide={this.handleAlertDismiss} style={{ marginBottom: '5%' }} >
+            <Modal.Header closeButton>
+              <Modal.Title>Alert</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <p>{alertMessage}</p>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={this.handleAlertDismiss}>
+                OK
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+      </>
+    );
+  }
 }
 
 export default AjouterClient;

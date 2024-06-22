@@ -51,7 +51,7 @@ export class ArticleList extends Component {
               <th className="text-left">Prix</th>
               <th className="Remise text-left">Remise</th>
               <th className="text-left">Montant</th>
-              <th className="text-left"></th>
+              <th className="text-left">Action</th>
             </tr>
           </thead>
           <tbody className="table-hover" >
