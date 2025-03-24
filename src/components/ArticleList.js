@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import ArticteItem from './ArticteItem';
 
+
 export class ArticleList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       articleList: JSON.parse(localStorage.getItem('articlesItemes')) || [],
       count: JSON.parse(localStorage.getItem('articlesItemes'))?.length || 0,
+      articleInfo : [],
     };
   }
 

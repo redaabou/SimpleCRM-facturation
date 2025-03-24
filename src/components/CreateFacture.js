@@ -4,14 +4,20 @@ import AjouterDetailsFacture from './AjouterDetailsFacture';
 import ArticleList from "./ArticleList";
 
 export class CreateFacture extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      articleInfo : [],
+    };
   
+  }
 
   render() {
     
     return (
       <div>
         <AjouterDetailsFacture />
-        <ArticleList />
+        <ArticleList  />
       </div>
     );
   }

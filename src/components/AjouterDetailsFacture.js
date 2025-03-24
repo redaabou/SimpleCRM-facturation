@@ -117,6 +117,7 @@ export class AjouterDetailsFacture extends Component {
         </form>
 
         <AjouterClient show={showAjouterClient} closeModal={this.closeModal} />
+  
       </div>
     );
   }

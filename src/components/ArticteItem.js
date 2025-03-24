@@ -54,7 +54,7 @@ export class ArticleItem extends Component {
     // Check if a product is selected
     if (!selectedProduct) {
         alert("Please select a product before adding.");
-        return; // Exit function if no product is selected
+        return;
     }
 
     this.setState(prevState => ({ isDisabled: !prevState.isDisabled }));
